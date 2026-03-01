@@ -31,7 +31,8 @@ class PaymentController extends Controller {
             'status'            => 'paid',
         ]);
 
-        $order->update(['status' => 'completed']);
+        // Keep order status unchanged (typically pending/preparing).
+        // Completion is handled manually via order status actions in dashboards.
 
         return response()->json($payment->load(['order', 'method']), 201);
     }

@@ -9,6 +9,26 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller {
+    public function publicQueue() {
+        $orders = Order::query()
+            ->whereIn('order_type', ['dine-in', 'takeout'])
+            ->whereIn('status', ['pending', 'preparing', 'completed'])
+            ->orderBy('id', 'asc')
+            ->get(['id', 'order_type', 'status', 'customer_name', 'created_at']);
+
+        return response()->json($orders);
+    }
+
+    public function publicConfirmServed(Order $order) {
+        if ($order->status !== 'completed') {
+            return response()->json(['message' => 'Only completed orders can be marked as served.'], 422);
+        }
+
+        $order->update(['status' => 'served']);
+
+        return response()->json($order);
+    }
+
     public function index() {
         return response()->json(Order::with(['cashier', 'items.product', 'payment.method'])->latest()->get());
     }
@@ -71,7 +91,7 @@ class OrderController extends Controller {
 
     public function update(Request $request, Order $order) {
         $data = $request->validate([
-            'status' => 'required|in:pending,preparing,completed,cancelled',
+            'status' => 'required|in:pending,preparing,completed,cancelled,served',
         ]);
         $order->update($data);
         return response()->json($order);

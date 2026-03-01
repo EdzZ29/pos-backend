@@ -9,10 +9,13 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ReceiptController;
+use App\Http\Controllers\Api\TimeLogController;
 
 // Public routes
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
+Route::get('/orders/queue/upcoming', [OrderController::class, 'publicQueue']);
+Route::post('/orders/{order}/confirm-served', [OrderController::class, 'publicConfirmServed']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -43,6 +46,11 @@ Route::middleware('auth:sanctum')->group(function () {
     // All roles
     Route::apiResource('orders', OrderController::class);
     Route::apiResource('payments', PaymentController::class);
+
+    // Time logs (owner can manage all, others can view)
+    Route::apiResource('time-logs', TimeLogController::class)->except(['destroy']);
+    Route::post('time-logs/mark-absent', [TimeLogController::class, 'markAbsent']);
+    Route::post('time-logs/qr-scan', [TimeLogController::class, 'qrScan']);
 });
 
 
