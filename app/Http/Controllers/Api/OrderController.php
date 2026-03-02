@@ -13,7 +13,9 @@ class OrderController extends Controller {
         $orders = Order::query()
             ->whereIn('order_type', ['dine-in', 'takeout'])
             ->whereIn('status', ['pending', 'preparing', 'completed'])
+            ->where('created_at', '>=', now()->startOfDay())
             ->orderBy('id', 'asc')
+            ->limit(100)
             ->get(['id', 'order_type', 'status', 'customer_name', 'created_at']);
 
         return response()->json($orders);
