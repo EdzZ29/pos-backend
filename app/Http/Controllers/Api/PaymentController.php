@@ -8,7 +8,13 @@ use Illuminate\Http\Request;
 
 class PaymentController extends Controller {
     public function index() {
-        return response()->json(Payment::with(['order', 'method', 'processedBy'])->latest()->get());
+        // Default to latest 500 payments; callers can pass ?limit=all for full history
+        $limit = request('limit', 500);
+        $query = Payment::with(['order', 'method', 'processedBy'])->latest();
+        if ($limit !== 'all') {
+            $query->limit((int) $limit);
+        }
+        return response()->json($query->get());
     }
 
     public function store(Request $request) {

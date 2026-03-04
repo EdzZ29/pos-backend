@@ -32,7 +32,13 @@ class OrderController extends Controller {
     }
 
     public function index() {
-        return response()->json(Order::with(['cashier', 'items.product', 'payment.method'])->latest()->get());
+        // Default to latest 500 orders; callers can pass ?limit=all for full history
+        $limit = request('limit', 500);
+        $query = Order::with(['cashier', 'items.product', 'payment.method'])->latest();
+        if ($limit !== 'all') {
+            $query->limit((int) $limit);
+        }
+        return response()->json($query->get());
     }
 
     public function store(Request $request) {
