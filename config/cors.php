@@ -26,8 +26,7 @@ return [
     ]),
 
     'allowed_origins_patterns' => [
-        // Allow all Vercel preview deployments
-        '#^https://.*\.vercel\.app$#',
+        '#^https://pos-frontend-production-9fb5\.up\.railway\.app$#',
     ],
 
     'allowed_headers' => ['*'],
