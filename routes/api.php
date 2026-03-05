@@ -18,12 +18,6 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/orders/queue/upcoming', [OrderController::class, 'publicQueue']);
 Route::post('/orders/{order}/confirm-served', [OrderController::class, 'publicConfirmServed']);
 
-Route::get('/reset-password', function () {
-    \App\Models\User::where('username', 'edmundo.ederio')
-        ->update(['password' => bcrypt('Admin123@')]);
-    return response()->json(['message' => 'Password reset successfully']);
-});
-
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
 
