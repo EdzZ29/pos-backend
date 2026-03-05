@@ -15,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Add these two lines ↓
         $middleware->statefulApi();
         $middleware->validateCsrfTokens(except: ['api/*']);
-        
+
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
         ]);
