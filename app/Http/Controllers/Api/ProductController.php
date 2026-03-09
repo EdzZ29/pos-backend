@@ -17,7 +17,7 @@ class ProductController extends Controller {
             'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
             'price'       => 'required|numeric|min:0',
-            'stock'       => 'integer|min:0',
+            'size'        => 'nullable|string|in:R,S,M,L,XL',
             'image'       => 'nullable|string',
         ]);
         return response()->json(Product::create($data), 201);
@@ -33,7 +33,7 @@ class ProductController extends Controller {
             'name'         => 'sometimes|string|max:255',
             'description'  => 'nullable|string',
             'price'        => 'sometimes|numeric|min:0',
-            'stock'        => 'sometimes|integer|min:0',
+            'size'         => 'nullable|string|in:R,S,M,L,XL',
             'is_available' => 'sometimes|boolean',
         ]);
         $product->update($data);

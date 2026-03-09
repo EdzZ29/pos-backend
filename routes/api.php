@@ -6,10 +6,13 @@ use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\AddonController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ReceiptController;
 use App\Http\Controllers\Api\TimeLogController;
+
+use App\Http\Controllers\Api\VariantController;
 
 // Public routes
 Route::get('/health', fn () => response()->json(['status' => 'ok']));
@@ -29,11 +32,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('users', UserController::class);
     });
 
-    // All authenticated users can browse products, categories & payment methods
+    // All authenticated users can browse products, categories, addons & payment methods
     Route::get('categories', [CategoryController::class, 'index']);
     Route::get('categories/{category}', [CategoryController::class, 'show']);
     Route::get('products', [ProductController::class, 'index']);
     Route::get('products/{product}', [ProductController::class, 'show']);
+    Route::get('addons', [AddonController::class, 'index']);
+    Route::get('addons/{addon}', [AddonController::class, 'show']);
     Route::get('payment-methods', function () {
         return response()->json(\App\Models\PaymentMethod::where('is_active', true)->get());
     });
@@ -42,6 +47,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:owner,manager')->group(function () {
         Route::apiResource('categories', CategoryController::class)->except(['index', 'show']);
         Route::apiResource('products', ProductController::class)->except(['index', 'show']);
+        Route::apiResource('addons', AddonController::class)->except(['index', 'show']);
+        
+        // Product variants (sizes with prices)
+        Route::get('products/{product}/variants', [VariantController::class, 'index']);
+        Route::post('products/{product}/variants', [VariantController::class, 'store']);
+        Route::put('products/{product}/variants/{variant}', [VariantController::class, 'update']);
+        Route::delete('products/{product}/variants/{variant}', [VariantController::class, 'destroy']);
+        Route::post('products/{product}/variants/sync', [VariantController::class, 'sync']);
     });
 
     // All roles

@@ -29,4 +29,8 @@ class OrderItem extends Model {
     public function variant() {
         return $this->belongsTo(ProductVariant::class);
     }
+
+    public function addons() {
+        return $this->hasMany(OrderItemAddon::class);
+    }
 }
