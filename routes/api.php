@@ -15,7 +15,7 @@ use App\Http\Controllers\Api\TimeLogController;
 use App\Http\Controllers\Api\VariantController;
 
 // Public routes
-Route::get('/health', fn () => response()->json(['status' => 'ok']));
+// Route::get('/health', fn () => response()->json(['status' => 'ok']));
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/orders/queue/upcoming', [OrderController::class, 'publicQueue']);
